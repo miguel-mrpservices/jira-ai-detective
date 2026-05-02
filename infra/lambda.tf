@@ -42,7 +42,7 @@ resource "aws_iam_role_policy" "lambda_permissions" {
         Resource = "*"
       },
       {
-        # Allow Claude 3.5 Sonnet invocation
+        # Allow Claude 3.5 Sonnet invocation (Fixed ARN as requested)
         Action   = "bedrock:InvokeModel"
         Effect   = "Allow"
         Resource = "arn:aws:bedrock:eu-central-1:289140051486:inference-profile/eu.anthropic.claude-sonnet-4-6"
@@ -53,7 +53,6 @@ resource "aws_iam_role_policy" "lambda_permissions" {
 
 # Core Lambda function definition
 resource "aws_lambda_function" "jira_ai_agent" {
-  # Use the ZIP file created by the archive_file data source
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
@@ -74,19 +73,28 @@ resource "aws_lambda_function" "jira_ai_agent" {
   }
 }
 
-
 # Public endpoint for Jira webhook
 resource "aws_lambda_function_url" "agent_url" {
-  function_name = aws_lambda_function.jira_ai_agent.function_name
+  function_name      = aws_lambda_function.jira_ai_agent.function_name
   # Auth is bypassed at the AWS level and handled internally via query parameters
   authorization_type = "NONE"
 }
 
 # Explicit permission for the internet to invoke the Lambda URL
+# Updated to avoid "Still creating..." hang by changing statement_id and adding dependencies
 resource "aws_lambda_permission" "allow_public_invoke_url" {
-  statement_id           = "FunctionURLAllowPublicAccess"
+  # Changed ID to force a fresh entry in AWS API
+  statement_id           = "AllowPublicInvokeViaURL" 
   action                 = "lambda:InvokeFunctionUrl"
-  function_name          = aws_lambda_function.jira_ai_agent.function_name
+  
+  # Using function ARN instead of name for more robust resource targeting
+  function_name          = aws_lambda_function.jira_ai_agent.arn 
   principal              = "*"
   function_url_auth_type = "NONE"
+
+  # Ensures this permission is only created after the function and URL are fully ready
+  depends_on = [
+    aws_lambda_function.jira_ai_agent,
+    aws_lambda_function_url.agent_url
+  ]
 }
