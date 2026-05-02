@@ -75,7 +75,7 @@ resource "aws_lambda_function" "jira_ai_agent" {
 
 # Public endpoint for Jira webhook
 resource "aws_lambda_function_url" "agent_url" {
-  function_name      = aws_lambda_function.jira_ai_agent.function_name
+  function_name = aws_lambda_function.jira_ai_agent.function_name
   # Auth is bypassed at the AWS level and handled internally via query parameters
   authorization_type = "NONE"
 }
@@ -84,11 +84,11 @@ resource "aws_lambda_function_url" "agent_url" {
 # Updated to avoid "Still creating..." hang by changing statement_id and adding dependencies
 resource "aws_lambda_permission" "allow_public_invoke_url" {
   # Changed ID to force a fresh entry in AWS API
-  statement_id           = "AllowPublicInvokeViaURL" 
-  action                 = "lambda:InvokeFunctionUrl"
-  
+  statement_id = "AllowPublicInvokeViaURL"
+  action       = "lambda:InvokeFunctionUrl"
+
   # Using function ARN instead of name for more robust resource targeting
-  function_name          = aws_lambda_function.jira_ai_agent.arn 
+  function_name          = aws_lambda_function.jira_ai_agent.arn
   principal              = "*"
   function_url_auth_type = "NONE"
 
