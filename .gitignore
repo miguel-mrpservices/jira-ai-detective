@@ -1,0 +1,67 @@
+# ==========================================
+# TERRAFORM SPECIFIC
+# ==========================================
+
+*_accessKeys.csv
+*.csv
+
+# Local plugins and modules (always re-downloaded with 'terraform init')
+.terraform/
+
+# Terraform lock file
+# NOTE: Some teams commit this to lock provider versions. 
+# For a personal lab, it's safer to ignore it to avoid cross-platform issues.
+.terraform.lock.hcl
+
+# State files: Contain sensitive infrastructure data and secrets
+*.tfstate
+*.tfstate.*
+
+# Variables: Never commit these as they usually contain API keys or passwords
+*.tfvars
+*.tfvars.json
+
+# Local overrides (for testing without changing main code)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Logs
+crash.log
+*.usage.log
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# ==========================================
+# SECURITY & SECRETS
+# ==========================================
+
+# AWS/SSH Keys (CRITICAL)
+*.pem
+*.pub
+*.key
+
+# Environment variables
+.env
+.envrc
+
+# ==========================================
+# SYSTEM & IDEs
+# ==========================================
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# IntelliJ / PyCharm
+.idea/
+
+infra/lambda_function.zip
