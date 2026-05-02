@@ -19,10 +19,11 @@ region = $region
 Set-Content -Path "$basePath\credentials" -Value $creds -Encoding ASCII
 
 # --- CONFIGURE COMMON-CONFIG ---
+# CORRECCIÓN: Uso de comillas simples para la ruta en formato TOML
 $commonConfig = @"
 [credentials]
     shared_credential_profile = "default"
-    shared_credential_file = "$basePath/credentials"
+    shared_credential_file = '$basePath\credentials'
 "@
 Set-Content -Path "$basePath\common-config.toml" -Value $commonConfig -Encoding ASCII
 
