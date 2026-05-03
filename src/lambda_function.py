@@ -122,7 +122,8 @@ def post_to_jira(issue_key, text, is_internal=False):
 
 def lambda_handler(event, context):
     params = event.get('queryStringParameters') or {}
-    if params.get('token') != SECRET_TOKEN:
+    # CORRECCIÓN AQUÍ: Se cambió SECRET_TOKEN por WEBHOOK_SECRET_TOKEN
+    if params.get('token') != WEBHOOK_SECRET_TOKEN:
         return {'statusCode': 403, 'body': 'Forbidden'}
 
     try:
