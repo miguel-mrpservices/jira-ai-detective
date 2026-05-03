@@ -42,10 +42,10 @@ resource "aws_iam_role_policy" "lambda_permissions" {
         Resource = "*"
       },
       {
-        # Allow Claude Sonnet invocation
+        # Allow Claude Sonnet invocation across all regions
         Action   = "bedrock:InvokeModel"
         Effect   = "Allow"
-        Resource = "arn:aws:bedrock:eu-central-1:289140051486:inference-profile/eu.anthropic.claude-sonnet-4-6"
+        Resource = "*" # Changed from specific ARN to wildcard to allow cross-region inference
       }
     ]
   })
@@ -75,7 +75,7 @@ resource "aws_lambda_function" "jira_ai_agent" {
 
 # Public endpoint for Jira webhook
 resource "aws_lambda_function_url" "agent_url" {
-  function_name = aws_lambda_function.jira_ai_agent.function_name
+  function_name      = aws_lambda_function.jira_ai_agent.function_name
   # Auth is bypassed at the AWS level and handled internally via query parameters
   authorization_type = "NONE"
 }
