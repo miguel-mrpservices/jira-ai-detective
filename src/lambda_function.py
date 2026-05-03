@@ -173,6 +173,11 @@ def lambda_handler(event, context):
         LOGS (Last 2 hours from {matched_group}): 
         {app_logs}
         
+        ⚠️ CRITICAL RULES FOR LOG ANALYSIS (NOISE FILTERING):
+        1. Production logs contain constant noise (health checks, CRON jobs, unrelated errors). You MUST STRICTLY IGNORE any log entry that is not directly related to the customer's specific symptom or timeframe.
+        2. If you see errors in the logs that do NOT correlate with the ticket description, ignore them completely to prevent distracting the support team.
+        3. Only use logs that match the customer's issue.
+        
         Provide your response wrapped in XML tags exactly as follows. DO NOT include any other text outside the tags.
 
         <internal>
@@ -180,7 +185,7 @@ def lambda_handler(event, context):
         (Max 2 lines. Briefly summarize the issue and state whether technical logs were found).
         
         ### ⚙️ ROOT CAUSE / HYPOTHESIS
-        (If logs are present, explain the exact root cause. IF NO LOGS ARE FOUND, explicitly state "No related logs were found" and provide your best technical hypothesis of what might be failing based solely on the ticket description).
+        (If logs are present, explain the exact root cause based ONLY on the filtered relevant logs. IF NO LOGS ARE FOUND matching the issue, explicitly state "No related logs were found" and provide your best technical hypothesis of what might be failing based solely on the ticket description).
         
         ### 🛠️ ACTION PLAN
         (Technical steps to resolve the issue, or investigation steps to confirm your hypothesis if logs were missing).
