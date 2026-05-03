@@ -10,8 +10,8 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      TF_VAR_jira_site: ${{ vars.JIRA_SITE }}
-      TF_VAR_jira_email: ${{ vars.JIRA_EMAIL }}
+      TF_VAR_jira_site: ${{ secrets.JIRA_SITE }}
+      TF_VAR_jira_email: ${{ secrets.JIRA_EMAIL }}
       TF_VAR_jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
       TF_VAR_webhook_secret_token: ${{ secrets.WEBHOOK_SECRET_TOKEN }}
 
