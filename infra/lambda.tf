@@ -75,7 +75,7 @@ resource "aws_lambda_function" "jira_ai_agent" {
 
 # Public endpoint for Jira webhook
 resource "aws_lambda_function_url" "agent_url" {
-  function_name      = aws_lambda_function.jira_ai_agent.function_name
+  function_name = aws_lambda_function.jira_ai_agent.function_name
   # Auth is bypassed at the AWS level and handled internally via query parameters
   authorization_type = "NONE"
 }
@@ -84,9 +84,9 @@ resource "aws_lambda_function_url" "agent_url" {
 
 #  Explicit permission for the internet to invoke the Lambda URL
 resource "aws_lambda_permission" "allow_public_invoke_url" {
-  statement_id           = "AllowPublicInvokeViaURL" 
+  statement_id           = "AllowPublicInvokeViaURL"
   action                 = "lambda:InvokeFunctionUrl"
-  function_name          = aws_lambda_function.jira_ai_agent.arn 
+  function_name          = aws_lambda_function.jira_ai_agent.arn
   principal              = "*"
   function_url_auth_type = "NONE"
 
