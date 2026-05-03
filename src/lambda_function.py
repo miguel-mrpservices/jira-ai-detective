@@ -80,21 +80,38 @@ def post_to_jira(issue_key, text, is_internal=False):
                 "attrs": {"level": 3},
                 "content": [{"type": "text", "text": line.replace('### ', '').strip()}]
             })
-        # Detect Bold in an entire line (**Text**)
-        elif line.startswith('**') and line.endswith('**'):
-            content_blocks.append({
-                "type": "paragraph",
-                "content": [{
-                    "type": "text", 
-                    "text": line.replace('**', '').strip(), 
-                    "marks": [{"type": "strong"}]
-                }]
-            })
-        # Normal paragraph
         else:
+            # Parse inline bold (**text**) and inline code (`text`)
+            parts = re.split(r'(\*\*.*?\*\*|`.*?`)', line)
+            paragraph_content = []
+            
+            for part in parts:
+                if not part: 
+                    continue
+                # If it is bold
+                if part.startswith('**') and part.endswith('**') and len(part) >= 4:
+                    paragraph_content.append({
+                        "type": "text",
+                        "text": part[2:-2],
+                        "marks": [{"type": "strong"}]
+                    })
+                # If it is inline code (e.g. IPs or error names)
+                elif part.startswith('`') and part.endswith('`') and len(part) >= 2:
+                    paragraph_content.append({
+                        "type": "text",
+                        "text": part[1:-1],
+                        "marks": [{"type": "code"}]
+                    })
+                # Normal text
+                else:
+                    paragraph_content.append({
+                        "type": "text",
+                        "text": part
+                    })
+
             content_blocks.append({
                 "type": "paragraph",
-                "content": [{"type": "text", "text": line}]
+                "content": paragraph_content
             })
 
     if not content_blocks:
